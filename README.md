@@ -179,6 +179,10 @@ A Sample Project
 In order to get started with Chef and Vagrant, I'm going to concoct a small sample project, 
 building a Node and Mongo environment. 
 
+All of the code for this sample project is available at 
+
+    https://github.com/classam/vagrant_presentation
+
 Let's get started. 
 
 Install VirtualBox and Vagrant
@@ -434,3 +438,18 @@ Roles & Data-Bags
 -----------------
 To vastly over-simplify, think of a role as a run-list of recipes, and a data-bag as a 
 database of configuration variables. 
+
+
+Conclusion
+----------
+
+So, we just covered: 
+
+1. Why you might want to use Vagrant & Chef
+ * To keep your environment under source control.
+2. How to create a basic Node + Mongo environment using Vagrant & Chef
+ * Mostly just downloading cookbooks and running them on stuff.
+3. Some of the basics of working with Chef in more depth. 
+ * It's all recipes. 
+
+Questions? 
