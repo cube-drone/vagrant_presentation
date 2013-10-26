@@ -387,7 +387,7 @@ Cookbooks are composed of
 * Providers
 * Metadata 
 
-### Recipes ### 
+### Recipes ###
 
 Recipes are the most important part of the cookbook - they are the actual script that 
 performs the configuration. It's possible to have an entire cookbook that is nothing
