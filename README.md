@@ -377,8 +377,8 @@ Cookbooks are composed of
 * Providers
 * Metadata 
 
-Recipes
--------
+### Recipes ### 
+
 Recipes are the most important part of the cookbook - they are the actual script that 
 performs the configuration. It's possible to have an entire cookbook that is nothing
 but a recipe. 
@@ -395,29 +395,36 @@ Here's an example of an extremely simple recipe for installing Python's "Flask" 
         user "root" 
     end
 
-Attributes
-----------
+### Attributes ###
+
 Attributes are overridable default configuration variables for your program.
 You might, for example, have a cookbook that could potentially install multiple versions
 of a library - and you could then treat the version as an attribute. 
 
-Templates
----------
+### Templates ###
+
 Templates are .erb templates - it's common to configure apps like Apache - apps that keep
 all of their individual configuration in large files - by creating a huge template of the
 configuration file, filling it with variables, and then dropping it in to the correct
 location on the target drive. 
 
-Files
------
+### Files ###
+
 Files are just important files that the cookbook may need. 
 
-Resources & Providers
----------------------
+### Resources & Providers ###
 
-Metadata
---------
+On top of scripting functionality for themselves, recipes can also provide functionality
+to other recipes. The 'apt' cookbook, for example, provides the 'add' and 'remove' 
+resources to other recipes, allowing users to add and remove repositories from apt's 
+sources. 
+
+### Metadata ###
+
+Finally, recipes often provide data about themselves - title, author, version and the like. 
+
 
 Roles & Data-Bags
 -----------------
-
+To vastly over-simplify, think of a role as a run-list of recipes, and a data-bag as a 
+database of configuration variables. 
