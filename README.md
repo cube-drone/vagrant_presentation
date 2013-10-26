@@ -170,6 +170,9 @@ interested in configuring. The full-stack client and server set may be more soft
 we need. Fortunately, for this kind of small project, chef offers a scaled down version called
 chef-solo, which we'll be using with Vagrant. 
 
+![Chef](swedish_chef.jpg)
+![Solo](han_solo.jpg)
+
 A Sample Project
 ----------------
 
