@@ -132,6 +132,9 @@ What is Chef
 Once you have an empty virtual machine, you want to install your environment on it, 
 preferrably in a way that is automated, repeatable, and if possible under-source control. 
 
+It's entirely possible to do this with nothing but a Bash script, but tools to work
+in this problem space already exist. Might as well take advantage of them. 
+
 This is where products like Chef and Puppet come in. They're configuration management
 systems that allow for automated provisioning and configuration of systems, designed 
 for use in big cloud deployments with dozens of computers that need to be kept in sync.
