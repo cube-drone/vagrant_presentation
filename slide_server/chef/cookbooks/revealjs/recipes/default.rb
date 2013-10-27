@@ -1,11 +1,15 @@
 
 # install grunt
 
-# npm install -g grunt-cli
+execute "npm instlal grunt" do
+    command "npm install -g grunt-cli"
+end    
 
 # install git
 
 #Clone the reveal.js repository
+
+package git
 
 #$ git clone https://github.com/hakimel/reveal.js.git
 
