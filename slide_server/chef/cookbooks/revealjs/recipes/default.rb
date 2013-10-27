@@ -6,10 +6,10 @@ execute "npm instlal grunt" do
 end    
 
 # install git
+package git
 
 #Clone the reveal.js repository
 
-package git
 
 #$ git clone https://github.com/hakimel/reveal.js.git
 
