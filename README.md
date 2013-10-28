@@ -35,8 +35,6 @@ Second Job
 In my second job out of university, our development environment was a 
 Java stack. It had a lot of different parts, mostly composed of a 
 conglomeration of JAR archives and source checkouts
-(screen joke: 
-    yes, I understand saying JAR archives is like saying ATM machine or PIN Number) 
 with specific versions that had been blessed by a core architecture team.
 
 Getting a working stack running took about a day of downloading and
@@ -56,8 +54,7 @@ going on at all.
 
 Fourth Job
 ----------
-In my fourth job out of university - you'll notice I'm doing this out of 
-chronological order, it's in service of a point - every developer just used
+In my fourth job out of university every developer just used
 the built-in development environment in Visual Studio - the mock IIS server, 
 in-memory database, and a series of C# libraries downloaded from a central 
 repository - around the office there was sort of an oral tradition about how
@@ -98,10 +95,10 @@ a complicated deployment environment that was not just completely under control,
 but easy to work with. The only thing that I'd want to change - it would be nice
 if the process for constructing the VM were a little more manageable. 
 
-Vagrant & Chef
---------------
+Get to the Point Already
+------------------------
 And that concludes story-time. Why did I need to tell you my back-story in exacting
-detail? Well, vanity, mostly - (screen joke: I call it the Joel on Software ) - 
+detail? Well, vanity, mostly - 
 but I was also trying to illustrate where the value lies in Vagrant and Chef.
 
 What is Vagrant
@@ -169,9 +166,6 @@ With Vagrant, and a local development environment, we only have one computer tha
 interested in configuring. The full-stack client and server set may be more software than 
 we need. Fortunately, for this kind of small project, chef offers a scaled down version called
 chef-solo, which we'll be using with Vagrant. 
-
-![Chef](swedish_chef.jpg)
-![Solo](han_solo.jpg)
 
 A Sample Project
 ----------------

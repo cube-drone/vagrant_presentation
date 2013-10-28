@@ -1,0 +1,980 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Building a Development Environment using Vagrant &amp; Chef</title>
+
+		<meta name="description" content="Building a development environment using Vagrant &amp; Chef">
+		<meta name="author" content="Curtis Lassam">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/solarized.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Building a Development Environment using Vagrant + Chef</h1>
+					<p>
+                        <small><a href="http://curtis.lassam.net">Curtis Lassam</a> / <a href="http://twitter.com/classam">@classam</a></small> 
+					</p>
+				</section>
+
+                <section>
+                    <section>
+                        <h2> Overview </h2>
+                        <p> We're going to cover... </p> 
+                    </section>
+                    <section>
+                        <p> Why you might want to use Vagrant &amp; Chef </p> 
+                    </section>
+                    <section>
+                        <p> What Vagrant and Chef <em>do</em> </p> 
+                    </section> 
+                    <section>
+                        <p> Building a basic NodeJS and Mongo environment using Vagrant &amp; Chef </p> 
+                    </section>
+                    <section>
+                        <p> Going a little deeper into a Chef cookbook. </p>
+                    </section> 
+                </section> 
+
+                <section>
+                    <section>
+                        <h2>Why you might want to use Vagrant & Chef </h2>
+                    </section>
+                    <section>
+                        <p> Let's talk about some different environment configuration strategies. </p> 
+                    </section> 
+                    <section>
+                        <ul>
+                            <li> Configuration by Lead Developer </li> 
+                            <li> Configuration by Central Architecture Team </li> 
+                            <li> Configuration by Ops </li> 
+                            <li> Configuration by Virtual Machine </li> 
+                        </ul> 
+                    </section> 
+                    <section> 
+                        <h2>A Tale of Four Jobs</h2> 
+                        <p>An embarassing look into my past.</p> 
+                    </section> 
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Job The First</h2>
+                    </section>
+                    <section>
+                        <h3>Internet Affiliate Marketers/Weight Loss Gurus/Scam Artists</h3> 
+                        <p>this one weight loss tip has health-care professionals stumped</p>
+                        <p><small>amputation</small></p>
+                    </section>
+                    <section>
+                        <p>Nobody had any idea what exactly was running on the dev and prod servers.</p>
+                        <p><small>okay, probably PHP and MySQL</small></p>
+                    </section>
+                    <section>
+                        <p>Most development was just done by ssh-ing into a dev box and using <strong>vim</strong> and <strong>screen</strong> </p> 
+                        <br /> 
+                        <p><strong>vim</strong> : an elegant tool from a more civilized age</p>
+                        <p><strong>screen</strong> : nope, too far, this just means you're crazy</p>
+                    </section>
+                    <section>
+                        <h3>Deployment</h3>
+                        <p>Step one: Poke Kyle</p>
+                        <p>Step two: Wait a few hours</p>
+                    </section>
+                    <section>
+                        <h3>Configuration by Lead Developer</h3>
+                        <p> All information about project environment stored in one dude. </p> 
+                    </section>
+                    <section> 
+                        <h3>Pitfalls</h3>
+                    </section> 
+                    <section>
+                        <h3>Missing Lead Developer</h3>
+                        <p>Watch out for <em>buses</em> or <em>vacations</em> </p> 
+                    </section> 
+                    <section>
+                        <h3>Pain in the Ass</h3>
+                        <p>Setting up the environment takes TIME. </p> 
+                    </section> 
+                    <section>
+                        <h3>Memory Isn't Perfect</h3>
+                        <p>The lead developer can't remember exactly how things went. </p> 
+                    </section> 
+                </section>
+
+                <section>
+                    <section>
+                        <h2> Job 2: Return of Job </h2>
+                        <p>Enormous Faceless Animal-Themed Telecom</p> 
+                    </section>
+                    <section>
+                        <h3> All applications use the same libraries and deployment environment. </h3> 
+                        <p>Java. See also: bureaucracy.</p>
+                    </section>
+                    <section>
+                        <p> Changes to the application environment required a petition to the Central Architecture team. </p> 
+                        <img src="../no_power.gif" /> 
+                    </section> 
+                    <section>
+                        <h3>Doing Anything at a Telecom</h3>
+                        <p>Step one: * </p>
+                        <p>Step two: Wait about six months. </p> 
+                    </section>
+                    <section>
+                        <h3>Configuration by Central Architecture Team</h3>
+                        <p>hey, that library isn't on the list of Architecture Team approved libraries!</p>
+                        <p><small>no JSON for you, peon</small></p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Job 4</h2>
+                        <p>yes, I understand these are not in chronological order, it's in service of a point</p> 
+                    </section>
+                    <section>
+                        <h3>Configuration by Ops</h3>
+                        <p>The lead devs and ops figured out the configuration they'd use to actually launch the software. </p> 
+                    </section> 
+                    <section>
+                        <p>Everybody just developed in Visual Studio, using the built-in development environment</p> 
+                    </section>
+                    <section>
+                        <h3>Configuration by Oral Tradition</h3>
+                        <p>tales of the correct configuration passed down from generation to generation</p>
+                    </section>
+                    <section>
+                        <img src="../whatever.gif" /> 
+                        <p>getting it to run outside of the protective dev bubble? that's ops' problem.</p> 
+                    </section>
+                </section> 
+
+                <section>
+                    <section>
+                        <h2>Job 3</h2>
+                        <p><em>It rhymes with Meviantart</em></p>
+                    </section>
+                    <section>
+                        <h3>Complex Configuration</h3>
+                        <p>sharding! caching! sample data! hand-coded C++ recommendation systems! </p> 
+                    </section>
+                    <section>
+                        <p>my advice for working on a 10-year-old PHP codebase</p>
+                        <p><em>don't work on a 10-year-old PHP codebase</em></p>
+                    </section>
+                    <section>
+                        <p>So they just gave every developer a virtual machine containing the whole shebang. </p> 
+                    </section>
+                    <section>
+                        <h3>Configuration By Virtual Machine</h3>
+                    </section>
+                    <section>
+                        <p> have as many different environments as you like without ever worrying about overlap </p>
+                        <p> each one is totally self contained </p> 
+                    </section>
+                    <section>
+                        <p> set up time on a new machine is almost nil </p>
+                    </section>
+                    <section>  
+                        <p> no need to worry about separating environments with tools like npm or rvm or virtualenv </p> 
+                    </section> 
+                    <section>
+                        <p> team members can develop in Windows, Linux, or Mac without having a different environment from other team members </p> 
+                        <p><small>hell, you could develop on a toaster if that's what floats your boat</small></p> 
+                    </section> 
+                    <section>
+                        <p>virtual machines: awesome</p> 
+                    </section>
+                    <section>
+                        <p>... until you have to change anything</p> 
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Get to the point already!</h2>
+                    </section>
+                    <section>
+                        <p>Talking a lot about myself in order to make a point about software</p>
+                        <p><small>I call it the Joel Spolsky</small></p>
+                    </section>
+                    <section>
+                        <p>It would be convenient to be able to keep your entire environment in a virtual machine. </p> 
+                        <p><small>spoiler: that's what <strong>Vagrant</strong> does</small></p>
+                    </section>
+                    <section> 
+                        <p>It would be useful to be able to keep your entire environment, in an easily modifiable format, under source control. </p>
+                        <p><small>spoiler: that's what <strong>Chef</strong> does</small></p> 
+                    </section> 
+                </section> 
+
+                <section>
+                    <section>
+                        <h2>What is Vagrant?</h2>
+                    </section>
+                    <section>
+                        <img src="../vagrant_new.png" /> 
+                        <p><strong>Vagrant</strong> is a tool that allows you to, from the command line, create, configure, and manage a virtual machine.</p>
+                    </section>
+                    <section>
+                        <img src="../vagrant_old.png" />
+                        <p>this was their original logo. </p> 
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>What is Chef?</h2>
+                        <img src="../what_is_love.gif" /> 
+                        <p><small>Baby don't hurt me, don't hurt me, no more</small></p>
+                    </section>
+                    <section>
+                        <img src="../chef.png" /> 
+                        <p><strong>Chef</strong> is a toolkit for rapidly configuring one or many computers. </p>
+                    </section>
+                    <section>
+                        <img src="../swedish_chef.jpg" />
+                        <p>this was never their logo</p> 
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Puppet vs. Chef</h2>
+                        <p><small>The ultimate showdown of ultimate destiny.</small></p>
+                    </section>
+                    <section>
+                        <img src="../pinocchio.gif" />
+                        &nbsp;
+                        <img src="../swedish_chef.jpg" height="300px"/>
+                        <p>they're basically just the <em>Pepsi</em> and <em>Coke</em> of configuration management. </p> 
+                        <p><small>170 calories in every can of Puppet</small></p>
+                    </section>
+                    <section>
+                        <table>
+                            <thead>
+                                <tr>
+                                        <th><strong>Puppet</strong></th>                         <th><strong>Chef</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>    <td> Client/Server </td>                                 <td> Client/Server </td>    </tr>
+                                <tr>    <td> Enterprisey </td>                                   <td> Ruby-y </td>           </tr>
+                                <tr>    <td> Config files </td>                                  <td> Scripts </td>          </tr>
+                                <tr>    <td><small>Secretly plan to charge you money</small></td><td><small>Also yes</small></td> </tr>
+                                <tr>    <td> Domain-specific language </td>                      <td> Ruby </td>             </tr>
+                                <tr>    <td> Good choice </td>                                   <td> Also a good choice </td></tr>
+                            </tbody>
+                        </table>
+                    </section> 
+                    <section>
+                        <h3> So why Chef, then? </h3>
+                        <p> because that's the one I picked, that's all </p> 
+                    </section> 
+                </section> 
+
+                <section>
+                    <section>
+                        <h2>Using Chef with Vagrant</h2>
+                    </section>
+                    <section>
+                        <img src="../swedish_chef.jpg" height="300px"/> 
+                        <img src="../han_solo.jpg" /> 
+                        <p><strong>chef-solo</strong> is a variant of chef designed for provisioning <em>just one</em> computer</p>
+                    </section> 
+                </section>
+                
+                <section>
+                    <section>
+                        <h2>A Sample Project</h2>
+                        <p> finally, some code </p>
+                    </section>
+                    <section>
+                        <p> This entire presentation, including all code samples, is available at </p>
+                        <pre> https://github.com/classam/vagrant_presentation </pre> 
+                    </section>
+                </section> 
+
+                <section>
+                    <section>
+                        <h2>Install</h2>
+                        <p>Go install <strong>VirtualBox</strong> and <strong>Vagrant</strong>. </p>
+                        <p> Also <strong>Git</strong> if you haven't installed it already. </p>
+                        <p><small>but why wouldn't you have git installed? </small></p> 
+                    </section>
+                    <section>
+                        <h3> Start with the obvious bit </h3> 
+                        <p> We're working in Git Bash (on Windows) </p> 
+                        <p>or Terminal (on Mac or Ubuntu) </p> 
+<pre><code>mkdir example
+cd example
+</code></pre>
+                    </section>
+                </section> 
+
+                <section>
+                    <section>
+                        <h2>Create a Vagrant Project</h2>
+                        <pre><code>vagrant init</code></pre>
+                    </section>
+                    <section>
+                        <h3>This creates a Vagrantfile</h3>
+                        <pre><code>ls
+.   ..  Vagrantfile</code></pre>
+                        <p>Which you should open in the code editor of your choice.</p>
+                        <p><small>obviously vim</small></p>
+                        <pre><code>vim Vagrantfile</code></pre>
+                    </section>
+                    <section>
+                        <h3>Holy shit lookit that</h3>
+                        <pre><code>
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # All Vagrant configuration is done here. The most common configuration
+  # options are documented and commented below. For a complete reference,
+  # please see the online documentation at vagrantup.com.
+
+  # Every Vagrant virtual environment requires a box to build off of.
+  config.vm.box = "base"
+
+  # The url from where the 'config.vm.box' box will be fetched if it
+  # doesn't already exist on the user's system.
+  # config.vm.box_url = "http://domain.com/path/to/above.box"
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # config.vm.network :forwarded_port, guest: 80, host: 8080
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  # config.vm.network :private_network, ip: "192.168.33.10"
+
+  # Create a public network, which generally matched to bridged network.
+  # Bridged networks make the machine appear as another physical device on
+  # your network.
+  
+  # If true, then any SSH connections made will enable agent forwarding.
+  # Default value: false
+  # config.ssh.forward_agent = true
+
+  # Share an additional folder to the guest VM. The first argument is
+  # the path on the host to the actual folder. The second argument is
+  # the path on the guest to mount the folder. And the optional third
+  # argument is a set of non-required options.
+  # config.vm.synced_folder "../data", "/vagrant_data"
+
+  # Provider-specific configuration so you can fine-tune various
+  # backing providers for Vagrant. These expose provider-specific options.
+  # Example for VirtualBox:
+  #
+  # config.vm.provider :virtualbox do |vb|
+  #   # Don't boot with headless mode
+  #   vb.gui = true
+  #
+  #   # Use VBoxManage to customize the VM. For example to change memory:
+  #   vb.customize ["modifyvm", :id, "--memory", "1024"]
+  # end
+  #
+  # View the documentation for the provider you're using for more
+  # information on available options.
+
+  # Enable provisioning with Puppet stand alone.  Puppet manifests
+  # are contained in a directory path relative to this Vagrantfile.
+  # You will need to create the manifests directory and a manifest in
+  # the file base.pp in the manifests_path directory.
+  #
+  # An example Puppet manifest to provision the message of the day:
+  #
+  # # group { "puppet":
+  # #   ensure => "present",
+  # # }
+  # #
+  # # File { owner => 0, group => 0, mode => 0644 }
+  # #
+  # # file { '/etc/motd':
+  # #   content => "Welcome to your Vagrant-built virtual machine!
+  # #               Managed by Puppet.\n"
+  # # }
+  #
+  # config.vm.provision :puppet do |puppet|
+  #   puppet.manifests_path = "manifests"
+  #   puppet.manifest_file  = "site.pp"
+  # end
+
+  # Enable provisioning with chef solo, specifying a cookbooks path, roles
+  # path, and data_bags path (all relative to this Vagrantfile), and adding
+  # some recipes and/or roles.
+  #
+  # config.vm.provision :chef_solo do |chef|
+  #   chef.cookbooks_path = "../my-recipes/cookbooks"
+  #   chef.roles_path = "../my-recipes/roles"
+  #   chef.data_bags_path = "../my-recipes/data_bags"
+  #   chef.add_recipe "mysql"
+  #   chef.add_role "web"
+  #
+  #   # You may also specify custom JSON attributes:
+  #   chef.json = { :mysql_password => "foo" }
+  # end
+
+  # Enable provisioning with chef server, specifying the chef server URL,
+  # and the path to the validation key (relative to this Vagrantfile).
+  #
+  # The Opscode Platform uses HTTPS. Substitute your organization for
+  # ORGNAME in the URL and validation key.
+  #
+  # If you have your own Chef Server, use the appropriate URL, which may be
+  # HTTP instead of HTTPS depending on your configuration. Also change the
+  # validation key to validation.pem.
+  #
+  # config.vm.provision :chef_client do |chef|
+  #   chef.chef_server_url = "https://api.opscode.com/organizations/ORGNAME"
+  #   chef.validation_key_path = "ORGNAME-validator.pem"
+  # end
+  #
+  # If you're using the Opscode platform, your validator client is
+  # ORGNAME-validator, replacing ORGNAME with your organization name.
+  #
+  # If you have your own Chef Server, the default validation client name is
+  # chef-validator, unless you changed the configuration.
+  #
+  #   chef.validation_client_name = "ORGNAME-validator"
+end
+</code></pre>
+                    </section>
+                    <section>
+                        <h3>It's actually mostly comments</h3>
+                        <p>If we were to take all of the comments out of the file, it would look like this: </p> 
+                        <pre><code>
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "base"
+end
+                        </code></pre>
+                        <p>But the comments are helpful, so leave 'em in. </p> 
+                    </section>
+                </section> 
+
+                <section>
+                    <section>
+                        <h2>Vagrantfile - Select an OS</h2>
+                        <p>What sort of box would you like?</p> 
+                    </section>
+                    <section>
+                        <h3> Here's where we select the box we want to load. </h3> 
+                        <pre><code>
+  # Every Vagrant virtual environment requires a box to build off of.
+  config.vm.box = "base"
+
+  # The url from where the 'config.vm.box' box will be fetched if it
+  # doesn't already exist on the user's system.
+  # config.vm.box_url = "http://domain.com/path/to/above.box"
+                        </code></pre>
+                    </section>
+                    <section>
+                        <p>To look at a list of candidate virtual machines, visit: </p>
+                        <pre>http://vagrantbox.es</pre>
+                    </section>
+                    <section>
+                        <img src="../vagrantboxes.png" /> 
+                    </section>
+                    <section>
+                        <h3>Let's use Ubuntu Precise Pangolin 32-Bit</h3>
+                        <p> You'll find it on the list under </p>
+                        <pre>http://files.vagrantup.com/precise32.box</pre>
+                    </section>
+                    <section> 
+                        <h3> Modify the Vagrantfile! </h3> 
+                        <pre><code>
+  # Every Vagrant virtual environment requires a box to build off of.
+  config.vm.box = "precise32"
+
+  # The url from where the 'config.vm.box' box will be fetched if it
+  # doesn't already exist on the user's system.
+  config.vm.box_url = "http://files.vagrantup.com/precise32.box"
+                        </code></pre>
+                    </section>
+                </section> 
+
+                <section>
+                    <section>
+                        <h2>Vagrantfile - Open Dev Ports</h2>
+                        <p>A little bit of <del>tenderness</del> networking </p>
+                    </section>
+                    <section>
+                        <h3> VM Networking Options </h3>
+                        <p>defaults to NAT</p> 
+                        <ul>
+                            <li>NAT <small>(Network Address Translation)</small></li>
+                            <li>Bridged </li>
+                        </ul> 
+                    </section>
+                    <section>
+                        <h3> NAT </h3>
+                        <p><small> it's a NATural fact </small></p>
+                        <p> Your computer is a router through which the VM connects to the internet. </p>
+                        <p> If you want your VM to have open ports, you need to forward them. </p> 
+                    </section>
+                    <section>
+                        <h3> Bridged </h3>
+                        <p> Your VM connects to the public network and gets its own IP. </p>
+                        <p> This is <em>really</em> useful for working on distributed systems. </p> 
+                    </section>
+                    <section>
+                        <h3> Look at this bit: </h3> 
+                        <pre><code>
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # config.vm.network :forwarded_port, guest: 80, host: 8080
+                        </code></pre>
+                    </section> 
+                    <section>
+                        <h3> Let's forward port 8080 </h3> 
+                        <pre><code>
+  config.vm.network :forwarded_port, guest: 8080, host: 8080
+                        </code></pre>
+                    </section>
+                </section> 
+
+                <section>
+                    <section> 
+                        <h2>Vagrantfile - Syncing a Dev Folder</h2>
+                        <p> the VM also needs some code to run. </p>
+                    </section>
+                    <section>
+                        <h3>We don't want to edit code in the VM. </h3>
+                        <p> For one thing, it doesn't have a GUI or any of our code tools. </p> 
+                        <p><small>and I'd rather use GVim than vim</small></p> 
+                    </section> 
+                    <section>
+                        <h3>Instead, we mount a local code folder to the VM. </h3>
+                        <pre><code>
+  # Share an additional folder to the guest VM. The first argument is
+  # the path on the host to the actual folder. The second argument is
+  # the path on the guest to mount the folder. And the optional third
+  # argument is a set of non-required options.
+  # config.vm.synced_folder "../data", "/vagrant_data"
+                        </code></pre> 
+                    </section>
+                    <section>
+                        <p>... like this: </p> 
+                        <pre><code>
+    config.vm.synced_folder ".", "/home/vagrant/synced" 
+                        </pre></code>
+                        <p> which mounts the directory we're running the Vagrantfile from to <code>/home/vagrant/synced</code></p> 
+                    </section>
+                </section> 
+
+                <section>
+                    <section>
+                        <h2>Chef - Installing Mongo and Node</h2>
+                    </section>
+                    <section>
+                        <h3>Manufacture a chef directory</h3>
+                        <pre><code> 
+    mkdir chef
+    mkdir chef/cookbooks
+    mkdir chef/roles
+    mkdir chef/data_bags
+                        </code></pre>
+                    </section> 
+                    <section> 
+                        <h3>Add those locations to the Vagrantfile</h3>
+                        <pre><code>
+  # Enable provisioning with chef solo, specifying a cookbooks path, roles
+  # path, and data_bags path (all relative to this Vagrantfile), and adding
+  # some recipes and/or roles.
+  #
+  # config.vm.provision :chef_solo do |chef|
+  #   chef.cookbooks_path = "../my-recipes/cookbooks"
+  #   chef.roles_path = "../my-recipes/roles"
+  #   chef.data_bags_path = "../my-recipes/data_bags"
+  #   chef.add_recipe "mysql"
+  #   chef.add_role "web"
+  #
+  #   # You may also specify custom JSON attributes:
+  #   chef.json = { :mysql_password => "foo" }
+  # end
+                        </code></pre>
+                    </section>
+                    <section>
+                        <pre><code>
+  # Enable provisioning with chef solo, specifying a cookbooks path, roles
+  # path, and data_bags path (all relative to this Vagrantfile), and adding
+  # some recipes and/or roles.
+  #
+    config.vm.provision :chef_solo do |chef|
+        chef.cookbooks_path = "chef/cookbooks"
+        chef.roles_path = "chef/roles"
+        chef.data_bags_path = "chef/data_bags"
+    end
+                        </code></pre>
+                    </section> 
+
+                    <section> 
+                        <h3>What are we installing?</h3>
+                        <p> We'll need to download some cookbooks. </p>
+                        <ul>
+                            <li><strong>MongoDB</strong> - https://github.com/edelight/chef-mongodb </li>
+                            <li><strong>NodeJS</strong> - https://github.com/mdxp/nodejs-cookbook </li> 
+                        </ul>
+                    </section>
+
+                    <section>
+                        <p> reading the documentation for these cookbooks, each one has a dependency on another cookbook. </p>
+                        <p> <strong>MongoDB</strong> requires the <strong>apt</strong> cookbook </p>
+                        <p> <strong>NodeJS</strong> requires the <strong>build-essential</strong> cookbook </p>
+                    </section>
+
+                    <section> 
+                        <p> so we download all four of these libraries and then place them in our <code>chef/cookbooks</code> directory </p>
+                        <ul>
+                            <li><strong>MongoDB</strong> - https://github.com/edelight/chef-mongodb </li>
+                            <li><strong>NodeJS</strong> - https://github.com/mdxp/nodejs-cookbook </li> 
+                            <li><strong>apt</strong> - https://github.com/opscode-cookbooks/apt </li>
+                            <li><strong>build-essential</strong> - http://github.com/opscode-cookbooks/build-essential </li> 
+                        </ul>
+                    </section> 
+
+                    <section> 
+                        <h3> Back to the Vagrantfile </h3>
+                        <p> and we use the add_recipe directive to add the MongoDB and NodeJS recipes. </p> 
+
+                        <pre><code>
+    config.vm.provision :chef_solo do |chef|
+        chef.cookbooks_path = "chef/cookbooks"
+        chef.roles_path = "chef/roles"
+        chef.data_bags_path = "chef/data_bags"
+
+        chef.add_recipe "mongodb::default"
+        chef.add_recipe "nodejs"
+        chef.add_recipe "nodejs::npm" 
+    end
+                        </code></pre>
+                    </section>
+
+                </section>
+
+                <section>
+                    <section>
+                        <h2> The Moment of Truth </h2>
+                    </section>
+                    <section>
+                        <h3> Let's boot up this Virtual Machine. </h3>
+                        <p> At the command line: </p>
+                        <pre><code>
+    vagrant up
+                        </pre></code>
+                    </section>
+                    
+                    <section>
+                        <pre><code>
+Bringing machine 'default' up with 'virtualbox' provider...
+[default] Importing base box 'precise32'...
+[default] Matching MAC address for NAT networking...
+[default] Setting the name of the VM...
+[default] Clearing any previously set forwarded ports...
+[default] Creating shared folders metadata...
+[default] Clearing any previously set network interfaces...
+[default] Preparing network interfaces based on configuration...
+[default] Forwarding ports...
+[default] -- 22 => 2222 (adapter 1)
+[default] -- 8080 => 8080 (adapter 1)
+[default] Booting VM...
+                        </pre></code>
+                    </section>
+
+                    <section>
+                        <h3> It's alive! </h3>
+                        <img src="../its_alive.jpg" /> 
+                    </section>
+
+                    <section>
+                        <h3> Wait, no, it's not. </h3>
+                    </section>
+
+                    <section>
+                        <h3> What the shit is this? </h3> 
+                        <pre><code>
+    [2013-10-25T23:34:09+00:00] Fatal: Chef::Exceptions::Package package[mongodb-10gen] 
+    (mongodb::default line 22) had an error: Chef::Exceptions::Package:No version specified, 
+    and no candidate version available for mongodb-10gen
+
+    Chef never successfully completed! 
+    Any errors should be visible in the output above. 
+    Please fix your recipes so that they properly complete. 
+                        </code></pre>
+
+                    </section> 
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Inevitable Debugging</h2>
+                        <p><small>sigh</small></p>
+                    </section>
+                    <section>
+                        <img src="../break.gif" /> 
+                        <p> configuration is hard, and Chef recipes have a tendency to.. uh.. fail. </p> 
+                    </section> 
+                    <section>
+                        <p> in this case, the recipe is looking for a package named <strong>mongodb-10gen</strong>, 
+                            but looking around in the Ubuntu repo, no such package exists. </p>
+                        <p> there <em>is</em> a <strong>mongodb</strong> package. Let's try that. </p>
+                    </section>
+                    <section> 
+                        <h3>Modify The Recipe</h3>
+                        <p><code> /code/cookbooks/mongodb/attributes/default.rb </code> line 83 </p> 
+                        <pre><code>
+default[:mongodb][:package_name] = "mongodb"
+                        </code></pre>
+                    </section> 
+                    <section>
+                        <h3>Re-run Chef</h3>
+                        <pre><code>
+vagrant provision
+                        </code></pre>
+                    </section> 
+                    <section>
+                        <p> it finishes this time </p> 
+                        <pre><code>
+[2013-10-28T20:46:31+00:00] INFO: Chef Run complete in 406.279946 seconds
+[2013-10-28T20:46:31+00:00] INFO: Running report handlers
+[2013-10-28T20:46:31+00:00] INFO: Report handlers complete
+                        </code></pre>
+                    </section> 
+                    <section>
+                        <h3> It's alive again! </h3>
+                        <img src="../its_alive.jpg" /> 
+                    </section> 
+                </section> 
+
+                <section>
+                    <section>
+                        <h2>Start Developing!</h2>
+                        <p> Create a node.js application. </p> 
+                    </section>
+                    <section>
+                        <h3>Hello World</h3>
+                        <pre><code>
+vim hello_world.js
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Let's just steal one. </h3>
+                        <p> This one's the node.js sample application: </p> 
+                        <pre><code>
+    var http = require('http');
+    http.createServer(function (req, res) {
+      res.writeHead(200, {'Content-Type': 'text/plain'});
+      res.end('Hello World\n');
+    }).listen(8080, '0.0.0.0');
+    console.log('Server running at http://127.0.0.1:8080/');
+                        </code></pre> 
+                        <p> but we've changed it to listen on 0.0.0.0 and port 8080 </p>
+                    </section>
+                    <section>
+                        <h3>Log in to the VM</h3>
+                        <p> To run our app, we need to ssh in to our running VM. </p>
+                        <pre><code>
+vagrant ssh
+                        </code></pre>
+                    </section>
+                    <section>
+                        <pre><code>
+Welcome to Ubuntu 12.04 LTS (GNU/Linux 3.2.0-23-generic-pae i686)
+
+ * Documentation:  http://help.ubuntu.com
+
+159 packages can be updated
+73 packages are security updates
+
+Welcome to your Vagrant-built virtual machine.
+Last login: Fri Sep 14 06:22:31 2012 from 10.0.2.2
+vagrant@precise32:~$
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h3> We can run our app from here. </h3>
+                        <pre><code>
+cd synced
+node hello_world.js
+                        </code></pre> 
+                    </section> 
+
+                    <section>
+                        <h3>There we go. </h3>
+                        <img src="../hello_world.png" /> 
+                    </section>
+
+                    <section>
+                        <p> We can also connect to the Mongo DB we just created. </p> 
+                        <pre><code>
+mongo
+                        </code></pre>
+                    </section> 
+
+                    <section>
+                        <h3> Okay, that's enough of that. </h3>
+                        <p> Let's exit. </p>
+                        <pre><code>
+exit
+                        </code></pre>
+                        <p> and turn off the server, while we're at it. </p>
+                        <pre><code>
+vagrant halt
+                        </code></pre>
+                    </section> 
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Custom Cookbooks</h2>
+                        <p>Installing your <em>own</em> apps. </p> 
+                    </section>
+                    <section> 
+                        <p>I think I'm running out of time, so the super short version: </p> 
+                    </section>
+
+                    <section>
+                        <h3>Cookbooks contain: </h3>
+                        <ul>
+                            <li>Recipes</li>
+                            <li>Attributes</li>
+                            <li>Templates</li>
+                            <li>Files</li>
+                            <li>Resources</li>
+                            <li>Providers</li>
+                            <li>Metadata</li>
+                        </ul>
+                    </section> 
+                    
+                    <section>
+                        <h3>Recipes</h3>
+                        <p> The most important part, the actual script that runs. </p>
+                    </section>
+
+                    <section>
+                        <h3>A super simple flask cookbook</h3>
+
+                        <p> if we create <code>chef/cookbooks/flask/recipes/default.rb </code></p>
+                        <p> and fill it with: </p>
+                        <pre><code>
+package "python-pip"
+
+execute "pip install flask" do
+    command "pip install flask"
+    user "root" 
+end
+                        </code></pre>
+                        <p>we've created a cookbook that will install the "flask" python library </p> 
+                    </section> 
+                    <section>
+                        <p><strong>Attributes</strong> are overridable default configuration parameters. </p>
+                        <p>For example, "which version of mongodb to install"</p> 
+                    </section>
+                    <section>
+                        <p><strong>Templates</strong> are .erb templates. </p>
+                        <p>(usually of configuration files)</p> 
+                    </section> 
+                    <section>
+                        <p><strong>Files</strong> are just... important files. </p> 
+                    </section>
+                    <section>
+                        <p>Recipes can provide <strong>Resources</strong> to other recipes, using <strong>Providers</strong> </p> 
+                    </section>
+                    <section>
+                        <p>Recipes also provide <strong>Metadata</strong> about themselves </p>
+                        <p>Things like 'author', 'title', 'version', and the like. </p> 
+                    </section> 
+                </section> 
+
+                <section> 
+                    <section>
+                        <h2>A Loose End</h2>
+                    </section>
+                    <section>
+                        <p> What are the <code>chef/roles</code> and <code>chef/data_bags</code> folders for? </p>
+                    </section> 
+                    <section>
+                        <p> A <strong>Role</strong> is a list of recipes to run. </p>
+                    </section>
+                    <section>
+                        <p> A <strong>Data-Bag</strong> is a database of configuration variables. </p> 
+                    </section>
+                </section>
+
+                <section>
+                    <h2> Presentation Conclude! </h2>
+                    <img src="../i_must_go.gif" /> 
+                </section> 
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
