@@ -44,6 +44,15 @@
 				</section>
 
                 <section>
+                    <h2>This Guy</h2>
+                        <ul>
+                            <li> classam </li> 
+                            <li> github.com/<strong>classam</strong> </li>
+                            <li> twitter.com/<strong>classam</strong> </li>
+                        </ul>
+                </section>
+
+                <section>
                     <section>
                         <h2> Overview </h2>
                         <p> We're going to cover... </p> 
@@ -55,10 +64,10 @@
                         <p> What Vagrant and Chef <em>do</em> </p> 
                     </section> 
                     <section>
-                        <p> Building a basic NodeJS and Mongo environment using Vagrant &amp; Chef </p> 
+                        <p> Build a basic NodeJS and Mongo environment using Vagrant &amp; Chef </p> 
                     </section>
                     <section>
-                        <p> Going a little deeper into a Chef cookbook. </p>
+                        <p> Go a little deeper into a Chef cookbook. </p>
                     </section> 
                 </section> 
 
@@ -67,15 +76,11 @@
                         <h2>Why you might want to use Vagrant & Chef </h2>
                     </section>
                     <section>
-                        <p> Let's talk about some different environment configuration strategies. </p> 
+                        <h3>The Problem</h3>
+                        <p>In order to code, we need a development environment. </p> 
                     </section> 
                     <section>
-                        <ul>
-                            <li> Configuration by Lead Developer </li> 
-                            <li> Configuration by Central Architecture Team </li> 
-                            <li> Configuration by Ops </li> 
-                            <li> Configuration by Virtual Machine </li> 
-                        </ul> 
+                        <p> Let's talk about some different environment configuration strategies. </p> 
                     </section> 
                     <section> 
                         <h2>A Tale of Four Jobs</h2> 
@@ -85,19 +90,19 @@
 
                 <section>
                     <section>
-                        <h2>Job The First</h2>
+                        <h2>Job 1: A Not So Good Way Of Doing Things</h2>
                     </section>
                     <section>
                         <h3>Internet Affiliate Marketers/Weight Loss Gurus/Scam Artists</h3> 
                         <p>this one weight loss tip has health-care professionals stumped</p>
-                        <p><small>amputation</small></p>
+                        <p>(amputation)</p>
                     </section>
                     <section>
-                        <p>Nobody had any idea what exactly was running on the dev and prod servers.</p>
-                        <p><small>okay, probably PHP and MySQL</small></p>
+                        <p>Lead Dev had <em>his</em> configuration on <em>his</em> box.</p>
+                        <p><small> He'd also set up a Linux box with an approximation of the configuration, for the rest of the devs. </small></p> 
                     </section>
                     <section>
-                        <p>Most development was just done by ssh-ing into a dev box and using <strong>vim</strong> and <strong>screen</strong> </p> 
+                        <p>Most development was just done by ssh-ing into the dev box and using <strong>vim</strong> and <strong>screen</strong> </p> 
                         <br /> 
                         <p><strong>vim</strong> : an elegant tool from a more civilized age</p>
                         <p><strong>screen</strong> : nope, too far, this just means you're crazy</p>
@@ -117,10 +122,9 @@
                     <section>
                         <h3>Missing Lead Developer</h3>
                         <p>Watch out for <em>buses</em> or <em>vacations</em> </p> 
-                    </section> 
-                    <section>
-                        <h3>Pain in the Ass</h3>
-                        <p>Setting up the environment takes TIME. </p> 
+                        <ul>
+                            <li> No deployments, no support, no nothin'. </li>
+                        </ul> 
                     </section> 
                     <section>
                         <h3>Memory Isn't Perfect</h3>
@@ -130,16 +134,16 @@
 
                 <section>
                     <section>
-                        <h2> Job 2: Return of Job </h2>
+                        <h2> Job 2: Another Not So Good Way To Do Things</h2>
                         <p>Enormous Faceless Animal-Themed Telecom</p> 
                     </section>
                     <section>
                         <h3> All applications use the same libraries and deployment environment. </h3> 
-                        <p>Java. See also: bureaucracy.</p>
+                        <p>take a moment to think about that</p> 
                     </section>
                     <section>
-                        <p> Changes to the application environment required a petition to the Central Architecture team. </p> 
-                        <img src="images/no_power.gif" /> 
+                        <p> Changes to the Master Application Environment required a petition to the Central Architecture team. </p> 
+                        <img src="http://curtis.lassam.net/projects/vagrant_slides/images/no_power.gif" /> 
                     </section> 
                     <section>
                         <h3>Doing Anything at a Telecom</h3>
@@ -151,17 +155,20 @@
                         <p>hey, that library isn't on the list of Architecture Team approved libraries!</p>
                         <p><small>no JSON for you, peon</small></p>
                     </section>
+                    <section>
+                        <h3>Obvious Downside and Surprising Upside</h3>
+                        <ul>
+                            <li>Hard to develop for. </li>
+                            <li>Easy to maintain after-the-fact. </li>
+                        </ul> 
+                    </section>
                 </section>
 
                 <section>
                     <section>
-                        <h2>Job 4</h2>
+                        <h2>Job 3: An Okay Way To Do Things</h2>
                         <p>yes, I understand these are not in chronological order, it's in service of a point</p> 
                     </section>
-                    <section>
-                        <h3>Configuration by Ops</h3>
-                        <p>The lead devs and ops figured out the configuration they'd use to actually launch the software. </p> 
-                    </section> 
                     <section>
                         <p>Everybody just developed in Visual Studio, using the built-in development environment</p> 
                     </section>
@@ -170,14 +177,15 @@
                         <p>tales of the correct configuration passed down from generation to generation</p>
                     </section>
                     <section>
-                        <img src="images/whatever.gif" /> 
+                        <h3>Configuration by Ops</h3>
+                        <img src="http://curtis.lassam.net/projects/vagrant_slides/images/whatever.gif" /> 
                         <p>getting it to run outside of the protective dev bubble? that's ops' problem.</p> 
                     </section>
                 </section> 
 
                 <section>
                     <section>
-                        <h2>Job 3</h2>
+                        <h2>Job 4 : A Significantly Better Way To Do Things</h2>
                         <p><em>It rhymes with Meviantart</em></p>
                     </section>
                     <section>
@@ -189,29 +197,32 @@
                         <p><em>don't work on a 10-year-old PHP codebase</em></p>
                     </section>
                     <section>
-                        <p>So they just gave every developer a virtual machine containing the whole shebang. </p> 
+                        <p>So they just gave every developer a virtual machine containing <em>the whole shebang</em>. </p> 
                     </section>
                     <section>
                         <h3>Configuration By Virtual Machine</h3>
                     </section>
                     <section>
-                        <p> have as many different environments as you like without ever worrying about overlap </p>
-                        <p> each one is totally self contained </p> 
+                        <h3>Upsides</h3> 
                     </section>
+                    <section>  
+                        <h3>Separate Libraries</h3>
+                        <p> npm, rvm, virtualenv </p> 
+                    </section> 
+                    <section>
+                        <h3>Separate Applications</h3>
+                        <p>databases, caching layers, task queues</p> 
+                    </section> 
                     <section>
                         <p> set up time on a new machine is almost nil </p>
                     </section>
-                    <section>  
-                        <p> no need to worry about separating environments with tools like npm or rvm or virtualenv </p> 
-                    </section> 
                     <section>
-                        <p> team members can develop in Windows, Linux, or Mac without having a different environment from other team members </p> 
+                        <h3> Windows, Linux, or Mac </h3>
+                        <p> Avoid the <em>dev-tool monoculture</em> that many shops develop. </p> 
                         <p><small>hell, you could develop on a toaster if that's what floats your boat</small></p> 
                     </section> 
                     <section>
-                        <p>virtual machines: awesome</p> 
-                    </section>
-                    <section>
+                        <h3> Virtual Machines: Awesome </h3> 
                         <p>... until you have to change anything</p> 
                     </section>
                 </section>
@@ -239,11 +250,16 @@
                         <h2>What is Vagrant?</h2>
                     </section>
                     <section>
-                        <img src="images/vagrant_new.png" /> 
-                        <p><strong>Vagrant</strong> is a tool that allows you to, from the command line, create, configure, and manage a virtual machine.</p>
+                        <img src="http://curtis.lassam.net/projects/vagrant_slides/images/vagrant_new.png" /> 
+                        <p><strong>Vagrant</strong> is a tool that allows you to, 
+                        from the command line, 
+                        create, configure, and manage a virtual machine.</p>
                     </section>
                     <section>
-                        <img src="images/vagrant_old.png" />
+                        <p>Vagrant maintains a library of blank 'vanilla' machines to use as a start point. </p>  
+                    </section>
+                    <section>
+                        <img src="http://curtis.lassam.net/projects/vagrant_slides/images/vagrant_old.png" />
                         <p>this was their original logo. </p> 
                     </section>
                 </section>
@@ -251,28 +267,28 @@
                 <section>
                     <section>
                         <h2>What is Chef?</h2>
-                        <img src="images/what_is_love.gif" /> 
+                        <img src="http://curtis.lassam.net/projects/vagrant_slides/images/what_is_love.gif" /> 
                         <p><small>Baby don't hurt me, don't hurt me, no more</small></p>
                     </section>
                     <section>
-                        <img src="images/chef.png" /> 
+                        <img src="http://curtis.lassam.net/projects/vagrant_slides/images/chef.png" /> 
                         <p><strong>Chef</strong> is a toolkit for rapidly configuring one or many computers. </p>
                     </section>
                     <section>
-                        <img src="images/swedish_chef.jpg" />
+                        <img src="http://curtis.lassam.net/projects/vagrant_slides/images/swedish_chef.jpg" />
                         <p>this was never their logo</p> 
                     </section>
                 </section>
 
                 <section>
                     <section>
-                        <h2>Puppet vs. Chef</h2>
-                        <p><small>The ultimate showdown of ultimate destiny.</small></p>
+                        <h2>You Might Also Have Heard Of Puppet</h2>
+                        <p> Or Capistrano, or Ansible, or ... </p> 
                     </section>
                     <section>
-                        <img src="images/pinocchio.gif" />
+                        <img src="http://curtis.lassam.net/projects/vagrant_slides/images/pinocchio.gif" />
                         &nbsp;
-                        <img src="images/swedish_chef.jpg" height="300px"/>
+                        <img src="http://curtis.lassam.net/projects/vagrant_slides/images/swedish_chef.jpg" height="300px"/>
                         <p>they're basically just the <em>Pepsi</em> and <em>Coke</em> of configuration management. </p> 
                         <p><small>170 calories in every can of Puppet</small></p>
                     </section>
@@ -301,13 +317,17 @@
 
                 <section>
                     <section>
-                        <h2>Using Chef with Vagrant</h2>
+                        <h2> Chef is For Configuring Lots of Computers</h2>
+                        <p> But we're only interested in configuring one computer. </p> 
                     </section>
                     <section>
-                        <img src="images/swedish_chef.jpg" height="300px"/> 
-                        <img src="images/han_solo.jpg" /> 
+                        <img src="http://curtis.lassam.net/projects/vagrant_slides/images/swedish_chef.jpg" height="300px"/> 
+                        <img src="http://curtis.lassam.net/projects/vagrant_slides/images/han_solo.jpg" /> 
                         <p><strong>chef-solo</strong> is a variant of chef designed for provisioning <em>just one</em> computer</p>
                     </section> 
+                    <section>
+                        <p>chef-solo is also baked right into the fluffy crust of Vagrant</p> 
+                    </section>
                 </section>
                 
                 <section>
@@ -508,7 +528,7 @@ end
                         <pre>http://vagrantbox.es</pre>
                     </section>
                     <section>
-                        <img src="images/vagrantboxes.png" /> 
+                        <img src="http://curtis.lassam.net/projects/vagrant_slides/images/vagrantboxes.png" /> 
                     </section>
                     <section>
                         <h3>Let's use Ubuntu Precise Pangolin 32-Bit</h3>
@@ -719,7 +739,7 @@ Bringing machine 'default' up with 'virtualbox' provider...
 
                     <section>
                         <h3> It's alive! </h3>
-                        <img src="images/its_alive.jpg" /> 
+                        <img src="http://curtis.lassam.net/projects/vagrant_slides/images/its_alive.jpg" /> 
                     </section>
 
                     <section>
@@ -747,7 +767,7 @@ Bringing machine 'default' up with 'virtualbox' provider...
                         <p><small>sigh</small></p>
                     </section>
                     <section>
-                        <img src="images/break.gif" /> 
+                        <img src="http://curtis.lassam.net/projects/vagrant_slides/images/break.gif" /> 
                         <p> configuration is hard, and Chef recipes have a tendency to.. uh.. fail. </p> 
                     </section> 
                     <section>
@@ -778,7 +798,7 @@ vagrant provision
                     </section> 
                     <section>
                         <h3> It's alive again! </h3>
-                        <img src="images/its_alive.jpg" /> 
+                        <img src="http://curtis.lassam.net/projects/vagrant_slides/images/its_alive.jpg" /> 
                     </section> 
                 </section> 
 
@@ -838,7 +858,7 @@ node hello_world.js
 
                     <section>
                         <h3>There we go. </h3>
-                        <img src="images/hello_world.png" /> 
+                        <img src="http://curtis.lassam.net/projects/vagrant_slides/images/hello_world.png" /> 
                     </section>
 
                     <section>
@@ -940,7 +960,7 @@ end
 
                 <section>
                     <h2> Presentation Conclude! </h2>
-                    <img src="images/i_must_go.gif" /> 
+                    <img src="http://curtis.lassam.net/projects/vagrant_slides/images/i_must_go.gif" /> 
                 </section> 
 
 			</div>
@@ -963,6 +983,12 @@ end
 				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
 				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
 
+                multiplex: {
+                    secret: '1384204141809272547', 
+                    id: 'e2ffe0a0f5331c58', // id, obtained from socket.io server
+                    url: '207.23.213.209:1948' // Location of your socket.io server
+                },
+
 				// Optional libraries used to extend on reveal.js
 				dependencies: [
 					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
@@ -970,7 +996,9 @@ end
 					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
 					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
 					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
-					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+                    { src: '//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.10/socket.io.min.js', async: true },
+                    { src: 'plugin/multiplex/master.js', async: true },
+                    { src: 'plugin/multiplex/client.js', async: true }
 				]
 			});
 
