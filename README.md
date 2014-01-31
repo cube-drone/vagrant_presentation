@@ -1,6 +1,35 @@
-
 Building a Development Environment using Vagrant and Chef 
 ---------------------------------------------------------
+
+Abstract
+--------
+
+One of the most painful parts of getting up to speed on a new project is 
+getting a development environment together. I attempt to demonstrate how to 
+automate development environment construction using Vagrant and Chef. 
+
+Vagrant is a tool used to create and configure lightweight, reproducible, 
+and portable development environments using virtual machines. 
+
+Chef is a tool used to configure machines automatically. 
+
+* Stories about different environment management strategies that don't work so well.
+    * Configuration by Lead Developer
+    * Configuration by Fiat
+    * Configuration by Oral Tradition
+    * Configuration by Virtual Machine
+* Here's a set of tools that's immensely helpful: Vagrant and Chef!
+    * What's Vagrant? (It's a command line Virtual Machine Manager)
+    * What's Chef? (It's a way to configure a machine automatically)
+    * Why Chef and not Puppet (or Ansible, or Capistrano...) ?
+    * Why Vagrant and not Docker? (TODO: actually write this in)
+* Tutorial: Getting started with Vagrant & Chef.
+    * By the end of the tutorial, users should be able to build a basic nodejs & mongo server. 
+
+
+Fulltext
+--------
+
 
 Hello, everyone! I'm here to talk to you about Vagrant and Chef. 
 
